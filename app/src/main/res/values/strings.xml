@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Calculadora IMC</string>
+    <string name="title_top_bar">Calculadora IMC</string>
+    <string name="title_screen">Calcular IMC</string>
+    <string name="label_txt_peso">Peso (Kg)</string>
+    <string name="label_txt_altura">Altura</string>
+    <string name="txt_btn_calcular">Calcular IMC</string>
+    <string name="txt_result_imc">Peso Normal\nIMC: %1$s</string>
 </resources>
