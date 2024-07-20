@@ -1,10 +1,12 @@
 package com.marcelos.calculadoraimc.ui.activity
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -27,15 +30,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.marcelos.calculadoraimc.R
+import com.marcelos.calculadoraimc.domain.CalculoImcModel
+import com.marcelos.calculadoraimc.domain.ImcMapper
 import com.marcelos.calculadoraimc.ui.theme.CalculadoraIMCTheme
 import com.marcelos.calculadoraimc.ui.theme.DarkBlue
 import com.marcelos.calculadoraimc.ui.theme.LightBlue
@@ -68,15 +78,28 @@ class MainActivity : ComponentActivity() {
     @Preview(showBackground = true, showSystemUi = false)
     @Composable
     private fun MainContent() {
+        val context = LocalContext.current
+
         val margin8 = dimensionResource(id = R.dimen.size_8)
         val margin16 = dimensionResource(id = R.dimen.size_16)
 
         var peso by remember { mutableStateOf(emptyString()) }
         var altura by remember { mutableStateOf(emptyString()) }
-        val resultCalculo by remember { mutableStateOf(emptyString()) }
+        var resultCalculo by remember { mutableStateOf(emptyString()) }
+
+        val focusRequester = remember { FocusRequester() }
 
         Scaffold(
-            topBar = { TopBar() }
+            topBar = {
+                TopBar(
+                    onRefreshClick = {
+                        peso = emptyString()
+                        altura = emptyString()
+                        resultCalculo = emptyString()
+                        focusRequester.requestFocus()
+                    }
+                )
+            }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -103,12 +126,14 @@ class MainActivity : ComponentActivity() {
                     PesoTextField(
                         peso = peso,
                         onPesoChange = { if (it.length <= 4) peso = it },
-                        modifier = Modifier.constrainAs(txtFieldPeso) {
-                            top.linkTo(txtTitle.bottom, margin8)
-                            start.linkTo(parent.start, margin16)
-                            end.linkTo(parent.end, margin16)
-                            width = Dimension.matchParent
-                        }
+                        modifier = Modifier
+                            .constrainAs(txtFieldPeso) {
+                                top.linkTo(txtTitle.bottom, margin8)
+                                start.linkTo(parent.start, margin16)
+                                end.linkTo(parent.end, margin16)
+                                width = Dimension.matchParent
+                            }
+                            .focusRequester(focusRequester)
                     )
 
                     AlturaTextField(
@@ -124,10 +149,21 @@ class MainActivity : ComponentActivity() {
 
                     CalcularButton(
                         onClick = {
-                            // Lógica de cálculo aqui
+                            if (peso.isEmpty() || altura.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.txt_aviso_toats),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                resultCalculo = ImcMapper.calcularImc(
+                                    context = context,
+                                    calculoImcModel = CalculoImcModel(peso, altura)
+                                )
+                            }
                         },
                         modifier = Modifier.constrainAs(btnCalcular) {
-                            top.linkTo(txtFieldAltura.bottom, margin16)
+                            top.linkTo(txtFieldAltura.bottom, margin8)
                             start.linkTo(parent.start, margin16)
                             end.linkTo(parent.end, margin16)
                             bottom.linkTo(parent.bottom, margin16)
@@ -137,13 +173,14 @@ class MainActivity : ComponentActivity() {
 
                     ResultText(
                         result = resultCalculo,
-                        modifier = Modifier.constrainAs(txtResult) {
-                            top.linkTo(btnCalcular.bottom, margin16)
-                            start.linkTo(parent.start, margin16)
-                            end.linkTo(parent.end, margin16)
-                            bottom.linkTo(parent.bottom, margin16)
-                            width = Dimension.matchParent
-                        }
+                        modifier = Modifier
+                            .constrainAs(txtResult) {
+                                top.linkTo(btnCalcular.bottom, margin16)
+                                start.linkTo(parent.start, margin16)
+                                end.linkTo(parent.end, margin16)
+                                bottom.linkTo(parent.bottom, margin16)
+                                width = Dimension.matchParent
+                            }
                     )
                 }
             }
@@ -152,7 +189,7 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun TopBar() {
+    private fun TopBar(onRefreshClick: () -> Unit) {
         TopAppBar(
             title = {
                 Text(
@@ -163,7 +200,17 @@ class MainActivity : ComponentActivity() {
             colors = TopAppBarDefaults.largeTopAppBarColors(
                 containerColor = LightBlue,
                 titleContentColor = White
-            )
+            ),
+            actions = {
+                IconButton(
+                    onClick = onRefreshClick
+                ) {
+                    Image(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_refresh),
+                        contentDescription = stringResource(R.string.text_ic_refresh_top_bar_accessibility)
+                    )
+                }
+            }
         )
     }
 
@@ -249,7 +296,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun ResultText(result: String, modifier: Modifier) {
         Text(
-            text = stringResource(id = R.string.txt_result_imc, result),
+            text = result,
             style = TypographyTitle.titleLarge.copy(color = DarkBlue),
             textAlign = TextAlign.Center,
             modifier = modifier

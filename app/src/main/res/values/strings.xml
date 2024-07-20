@@ -5,5 +5,12 @@
     <string name="label_txt_peso">Peso (Kg)</string>
     <string name="label_txt_altura">Altura</string>
     <string name="txt_btn_calcular">Calcular IMC</string>
-    <string name="txt_result_imc">Peso Normal\nIMC: %1$s</string>
+    <string name="txt_aviso_toats">Preencha todos os campos!</string>
+    <string name="imc_abaixo_peso">Você está abaixo do peso\nseu IMC é: %s</string>
+    <string name="imc_peso_normal">Seu peso está normal\nseu IMC é: %s\n</string>
+    <string name="imc_sobrepeso">Você está com sobrepeso\nseu IMC é: %s</string>
+    <string name="imc_obesidade_grau_1">Você está com Obesidade grau 1\nseu IMC é: %s</string>
+    <string name="imc_obesidade_grau_2">Você está com Obesidade grau 2\nseu IMC é: %s</string>
+    <string name="imc_obesidade_grau_3">Você está com Obesidade grau 3\nseu IMC é: %s</string>
+    <string name="text_ic_refresh_top_bar_accessibility">Limpar dados</string>
 </resources>
