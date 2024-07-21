@@ -14,6 +14,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,12 +26,15 @@ class MainActivityTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @Test
-    fun checkAllElementsAreVisible() {
+    @Before
+    fun setup() {
         composeTestRule.setContent {
             MainActivity().MainContent()
         }
+    }
 
+    @Test
+    fun checkAllElementsAreVisible() {
         composeTestRule.onNodeWithTag("topBar").assertIsDisplayed()
         composeTestRule.onNodeWithTag("txtFieldPeso").assertIsDisplayed()
         composeTestRule.onNodeWithTag("txtFieldAltura").assertIsDisplayed()
@@ -41,10 +45,6 @@ class MainActivityTest {
 
     @Test
     fun checkTopBarAndTxtTitleIsCorrect() {
-        composeTestRule.setContent {
-            MainActivity().MainContent()
-        }
-
         composeTestRule
             .onNodeWithTag("topBar")
             .onChildren()
@@ -58,10 +58,6 @@ class MainActivityTest {
 
     @Test
     fun iconButtonClickReturnsFocusToPesoField() {
-        composeTestRule.setContent {
-            MainActivity().MainContent()
-        }
-
         composeTestRule.onNodeWithTag("iconButtonTopBar")
             .performClick()
 
@@ -71,10 +67,6 @@ class MainActivityTest {
 
     @Test
     fun calcularButtonShowsResultWhenFieldsAreFilled() {
-        composeTestRule.setContent {
-            MainActivity().MainContent()
-        }
-
         composeTestRule.onNodeWithTag("txtFieldPeso").performTextInput("70")
         composeTestRule.onNodeWithTag("txtFieldAltura").performTextInput("1.75")
 
