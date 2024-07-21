@@ -52,4 +52,4 @@ Sinta-se à vontade para contribuir com este projeto. Você pode abrir issues pa
 
 - **Nome**: Marcelo Souza
 - **Email**: marcelocaregnatodesouza@gmail.com
-- **LinkedIn**: [meu-linkedin](https://www.linkedin.com/in/marcelo-souza-1999/)
+- **LinkedIn**: [meu-linkedin](https://www.linkedin.com/in/marcelosouza-1999/)
