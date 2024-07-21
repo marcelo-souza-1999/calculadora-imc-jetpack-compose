@@ -35,6 +35,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
     @Preview(showBackground = true, showSystemUi = false)
     @Composable
-    private fun MainContent() {
+    fun MainContent() {
         val context = LocalContext.current
 
         val margin8 = dimensionResource(id = R.dimen.size_8)
@@ -115,12 +116,14 @@ class MainActivity : ComponentActivity() {
                     val (txtTitle, txtFieldPeso, txtFieldAltura, btnCalcular, txtResult) = createRefs()
 
                     Title(
-                        modifier = Modifier.constrainAs(txtTitle) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            width = Dimension.matchParent
-                        }
+                        modifier = Modifier
+                            .constrainAs(txtTitle) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.matchParent
+                            }
+                            .testTag("txtTitle")
                     )
 
                     PesoTextField(
@@ -133,18 +136,21 @@ class MainActivity : ComponentActivity() {
                                 end.linkTo(parent.end, margin16)
                                 width = Dimension.matchParent
                             }
+                            .testTag("txtFieldPeso")
                             .focusRequester(focusRequester)
                     )
 
                     AlturaTextField(
                         altura = altura,
                         onAlturaChange = { if (it.length <= 4) altura = it },
-                        modifier = Modifier.constrainAs(txtFieldAltura) {
-                            top.linkTo(txtFieldPeso.bottom, margin8)
-                            start.linkTo(parent.start, margin16)
-                            end.linkTo(parent.end, margin16)
-                            width = Dimension.matchParent
-                        }
+                        modifier = Modifier
+                            .constrainAs(txtFieldAltura) {
+                                top.linkTo(txtFieldPeso.bottom, margin8)
+                                start.linkTo(parent.start, margin16)
+                                end.linkTo(parent.end, margin16)
+                                width = Dimension.matchParent
+                            }
+                            .testTag("txtFieldAltura")
                     )
 
                     CalcularButton(
@@ -157,18 +163,19 @@ class MainActivity : ComponentActivity() {
                                 ).show()
                             } else {
                                 resultCalculo = ImcMapper.calcularImc(
-                                    context = context,
                                     calculoImcModel = CalculoImcModel(peso, altura)
                                 )
                             }
                         },
-                        modifier = Modifier.constrainAs(btnCalcular) {
-                            top.linkTo(txtFieldAltura.bottom, margin8)
-                            start.linkTo(parent.start, margin16)
-                            end.linkTo(parent.end, margin16)
-                            bottom.linkTo(parent.bottom, margin16)
-                            width = Dimension.matchParent
-                        }
+                        modifier = Modifier
+                            .constrainAs(btnCalcular) {
+                                top.linkTo(txtFieldAltura.bottom, margin8)
+                                start.linkTo(parent.start, margin16)
+                                end.linkTo(parent.end, margin16)
+                                bottom.linkTo(parent.bottom, margin16)
+                                width = Dimension.matchParent
+                            }
+                            .testTag("btnCalcularImc")
                     )
 
                     ResultText(
@@ -179,8 +186,8 @@ class MainActivity : ComponentActivity() {
                                 start.linkTo(parent.start, margin16)
                                 end.linkTo(parent.end, margin16)
                                 bottom.linkTo(parent.bottom, margin16)
-                                width = Dimension.matchParent
                             }
+                            .testTag("txtResult")
                     )
                 }
             }
@@ -197,13 +204,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(start = dimensionResource(id = R.dimen.size_8))
                 )
             },
+            modifier = Modifier.testTag("topBar"),
             colors = TopAppBarDefaults.largeTopAppBarColors(
                 containerColor = LightBlue,
                 titleContentColor = White
             ),
             actions = {
                 IconButton(
-                    onClick = onRefreshClick
+                    onClick = onRefreshClick,
+                    modifier = Modifier
+                        .testTag("iconButtonTopBar")
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_refresh),
