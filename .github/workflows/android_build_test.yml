@@ -40,9 +40,9 @@ jobs:
 
       - name: Install Emulator
         run: |
-          echo "y" | sdkmanager "system-images;android-33;google_apis;x86"
+          echo "y" | sdkmanager "system-images;android-27;google_apis;x86"
           sdkmanager --licenses
-          echo "no" | avdmanager create avd --name test --package "system-images;android-33;google_apis;x86" --force --sdcard 512M
+          echo "no" | avdmanager create avd --name test --package "system-images;android-27;google_apis;x86" --force --sdcard 512M
 
       - name: Start Emulator
         run: |
