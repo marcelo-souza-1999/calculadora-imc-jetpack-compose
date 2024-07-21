@@ -33,6 +33,11 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
+      - name: List SDK Packages
+        run: sdkmanager --list
+        env:
+          ANDROID_HOME: ${{ github.workspace }}/android-sdk
+
       - name: Install Emulator
         run: |
           echo "y" | sdkmanager "system-images;android-33;google_apis;x86"
