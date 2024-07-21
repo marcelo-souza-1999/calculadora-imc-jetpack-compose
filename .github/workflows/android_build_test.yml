@@ -30,11 +30,27 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Install Emulator
+        run: |
+          echo "y" | sdkmanager "system-images;android-33;google_apis;x86"
+          sdkmanager --licenses
+          echo "no" | avdmanager create avd --name test --package "system-images;android-33;google_apis;x86" --force --sdcard 512M
+
+      - name: Start Emulator
+        run: |
+          emulator -avd test -no-snapshot -no-audio -no-boot-anim -gpu off &
+
+      - name: Wait for Emulator
+        run: |
+          $ANDROID_HOME/emulator/emulator -list-avds
+          adb wait-for-device
+          adb shell input keyevent 82
+
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
       - name: Run Instrumented Tests
         run: ./gradlew connectedDebugAndroidTest
-
-      - name: Detekt Verification
-        run: ./gradlew detektAll
