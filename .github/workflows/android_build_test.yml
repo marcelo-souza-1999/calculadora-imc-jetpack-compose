@@ -48,12 +48,6 @@ jobs:
         run: |
           emulator -avd test -no-snapshot -no-audio -no-boot-anim -gpu off &
 
-      - name: Wait for Emulator
-        run: |
-          $ANDROID_HOME/emulator/emulator -list-avds
-          adb wait-for-device
-          adb shell input keyevent 82
-
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
