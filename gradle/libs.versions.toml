@@ -10,7 +10,7 @@ lifecycleRuntimeKtx = "2.8.3"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 constraintlayoutCompose = "1.0.1"
-accompanistSystemUiController = "0.35.1-alpha"
+accompanistSystemUiController = "0.36.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
